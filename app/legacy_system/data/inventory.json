@@ -5,7 +5,7 @@
         "last_checked": "2026-01-25"
       }
     },
-    "stock": {
+    "stock_levels": {
       "BRG01": 120,
       "ICE09": 0
     }
