@@ -1,0 +1,46 @@
+{
+    "menu_items" : [
+        {
+            "item_code": 1,
+            "name": "Margherita Pizza",
+            "description": "Classic pizza with tomato sauce, mozzarella cheese, and fresh basil.",
+            "price_inr": 8.99,
+            "category": "Pizza"
+        },
+        {
+            "item_code": 2,
+            "name": "Caesar Salad",
+            "description": "Crisp romaine lettuce with Caesar dressing, croutons, and Parmesan cheese.",
+            "price_inr": 6.49,
+            "category": "Salad"
+        },
+        {
+            "item_code": 3,
+            "name": "Spaghetti Carbonara",
+            "description": "Traditional Italian pasta with eggs, cheese, pancetta, and pepper.",
+            "price_inr": 10.99,
+            "category": "Pasta"
+        },
+        {
+            "item_code": 4,
+            "name": "Tiramisu",
+            "description": "Classic Italian dessert with layers of coffee-soaked ladyfingers and mascarpone cheese.",
+            "price_inr": 5.99,
+            "category": "Dessert"
+        },
+        {
+            "item_code": 5,
+            "name": "Minestrone Soup",
+            "description": "Hearty vegetable soup with beans, pasta, and a rich tomato broth.",
+            "price_inr": 4.99,
+            "category": "Soup"
+        },
+        {
+            "item_code": 6,
+            "name": "Grilled Chicken Panini",
+            "description": "Grilled chicken breast with mozzarella, tomato, and basil pesto on ciabatta bread.",
+            "price_inr": 7.99,
+            "category": "Sandwich"
+        }
+    ]
+}
