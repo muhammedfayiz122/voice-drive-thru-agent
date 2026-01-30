@@ -1,13 +1,18 @@
 {
     "machines": {
-      "ICE_CREAM_MACHINE": {
+      "ICE_CREAM_MACHINE": { 
         "status": "BROKEN",
         "last_checked": "2026-01-25"
       }
     },
     "stock_levels": {
-      "BRG01": 120,
-      "ICE09": 0
+      "PZ001": 20,
+      "SL002": 15,
+      "SP003": 10,
+      "DS004": 5,
+      "SO005": 0,
+      "SD006": 8,
+      "ICE09": 30
     }
 }
   
