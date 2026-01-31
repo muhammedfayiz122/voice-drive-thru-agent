@@ -1,35 +1,54 @@
 from langgraph.graph import StateGraph, END
-from app.agent.state import AgentState
-from app.agent.nodes import (
-    parse_input,
-    check_inventory as check_inventory_node,
-    decide_next as decide_next_step,
+from agent.state import AgentState
+from agent.nodes import (
+    llm_intent_analyzer,
+    intent_router,
+    greeting_response,
+    inventory_check,
     confirm_order,
-    submit_order as submit_order_node,
-)
-
-def build_agent_graph():
-    graph = StateGraph(AgentState)
-
-    graph.add_node("parse_input", parse_input)
-    graph.add_node("check_inventory", check_inventory_node)
-    graph.add_node("confirm_order", confirm_order)
-    graph.add_node("submit_order", submit_order_node)
-
-    graph.set_entry_point("parse_input")
-
-    graph.add_edge("parse_input", "check_inventory")
-
-    graph.add_conditional_edges(
-        "check_inventory",
-        decide_next_step,
-        {
-            "confirm_order": "confirm_order",
-            "end": END,
-        },
+    submit_order_node,
+    llm_response,
+    invalid_response,
     )
 
-    graph.add_edge("confirm_order", "submit_order")
-    graph.add_edge("submit_order", END)
+def build_graph():
+    g = StateGraph(AgentState)
 
-    return graph.compile()
+    g.add_node("intent_analyzer", llm_intent_analyzer)
+    g.add_node("greeting_response", greeting_response)
+    g.add_node("inventory_check", inventory_check)
+    g.add_node("confirm_order", confirm_order)
+    g.add_node("submit_order", submit_order_node)
+    g.add_node("llm_response", llm_response)
+    g.add_node("invalid_response", invalid_response)
+
+    g.set_entry_point("intent_analyzer")
+
+    g.add_conditional_edges(
+        "intent_analyzer",
+        intent_router,
+        {
+            "greeting_response": "greeting_response",
+            "inventory_check": "inventory_check",
+            # "order_processing": "confirm_order",
+            "invalid_response": "invalid_response",
+        }
+    )
+
+    g.add_conditional_edges(
+        "inventory_check",
+        decision_node,
+        {
+            "confirm_order": "confirm_order",
+            "llm_response": "llm_response",
+            "end": END,
+        }
+    )
+
+    g.add_edge("confirm_order", "submit_order")
+    g.add_edge("submit_order", END)
+    g.add_edge("greeting_response", END)
+    g.add_edge("llm_response", END)
+    g.add_edge("invalid_response", END)
+
+    return g.compile()
