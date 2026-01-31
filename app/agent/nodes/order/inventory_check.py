@@ -1,5 +1,5 @@
 from app.agent.state import AgentState
 
 
-def invalid_response(state: AgentState) -> AgentState:
+def inventory_check(state: AgentState) -> AgentState:
     return state

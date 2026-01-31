@@ -1,4 +1,5 @@
 from app.agent.state import AgentState
 
-def response_node(state: AgentState) -> AgentState:
+
+def inventory_response(state: AgentState) -> AgentState:
     return state

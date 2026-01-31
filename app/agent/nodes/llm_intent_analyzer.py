@@ -1,11 +1,11 @@
 import json
 from langchain.messages import HumanMessage
 from app.agent.state import AgentState
-from app.agent.llm import get_llm
-from app.agent.prompts import INTENT_PROMPT
+from app.agent.utils.llm import get_llm
+from app.agent.prompt.prompts import INTENT_PROMPT
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import PromptTemplate
-from app.agent.schemas import IntentAnalysisResult
+from app.agent.schema.schemas import IntentAnalysisResult
 
 from dotenv import load_dotenv
 
