@@ -1,10 +1,25 @@
 from app.agent.state import AgentState
+from app.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 def intent_router(state: AgentState) -> str:
-    if state["intent"] == "GREETING":
-        return "greeting_response"
-    if state["intent"] == "ORDER":
-        return "order_processing"
-    if state["intent"] == "INVENTORY_QUESTION":
-        return "inventory_check"
-    return "invalid_response"
+    """Routes to appropriate node based on intent."""
+    intent = state.get("intent", "UNCLEAR")
+    
+    logger.info(f"Routing intent: {intent}")
+    
+    routing = {
+        "GREETING": "greeting",
+        "ORDER": "order",
+        "ADD_MORE": "order",           # Same handler as ORDER
+        "MODIFY": "modify",
+        "REMOVE": "remove",
+        "DONE_ORDERING": "done",
+        "CANCEL_ORDER": "cancel",
+        "INVENTORY_QUESTION": "inventory",
+        "REPEAT_ORDER": "repeat",
+        "UNCLEAR": "unclear",
+    }
+    
+    return routing.get(intent, "unclear")
