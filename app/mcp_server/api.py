@@ -2,9 +2,16 @@
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from typing import List
+from app.mcp_server.models import OrderItemRequest, OrderRequest
 
 from app.mcp_server.legacy_client import fetch_menu, fetch_inventory
-from app.mcp_server.validator import validate_item_exists, validate_quantity, check_inventory
+from app.mcp_server.validator import (
+    validate_item_exists, 
+    validate_quantity, 
+    check_inventory,
+    match_menu_item,
+)
 
 app = FastAPI()
 
@@ -25,7 +32,56 @@ def get_menu():
     
     return {"menu": mcp_menu}
 
-
+@app.post("/mcp/validate-order-items")
+def validate_order_items(items: List[OrderItemRequest]):
+    """
+    Single endpoint that:
+    1. Matches user terms to menu items
+    2. Checks inventory for each
+    3. Returns complete validation result
+    """
+    results = []
+    all_available = True
+    legacy_menu = fetch_menu()
+    inventory = fetch_inventory()
+    
+    for item in items:
+        item_name = item.name
+        quantity = item.quantity
+        
+        # 1) Match to menu item
+        matched_item = match_menu_item(item_name, legacy_menu["menu_items"])
+        if not matched_item:
+            results.append({
+                "requested_name": item_name,
+                "found": False,
+                "available": False,
+                "reason": "Item not found in menu"
+            })
+            all_available = False
+            continue
+        
+        # 2) Check inventory
+        available, reason = check_inventory(matched_item["item_code"], inventory)
+        results.append({
+            "requested_name": item_name,
+            "found": True,
+            "item_code": matched_item["item_code"],
+            "menu_name": matched_item["name"],
+            "price": matched_item["price_inr"],
+            "quantity": quantity,
+            "available": available,
+            "reason": reason
+        })
+        if not available:
+            all_available = False
+            
+    return {
+        "all_available": all_available,
+        "results": results
+    }    
+   
+    
 @app.get("/mcp/inventory/{item_code}")
 def get_item_availability(item_code: str):
     """
@@ -55,9 +111,6 @@ def get_item_availability(item_code: str):
         "reason": reason
     }
 
-class OrderRequest(BaseModel):
-    item_code: str
-    quantity: int
 
 @app.post("/mcp/order")
 def submit_order(order: OrderRequest):

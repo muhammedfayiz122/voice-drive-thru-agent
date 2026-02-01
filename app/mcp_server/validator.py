@@ -37,3 +37,23 @@ def check_inventory(item_code: str, inventory: dict) -> bool:
         return False, "Item out of stock"
 
     return True, "Available"
+
+def match_menu_item(item_name: str, menu_items: dict) -> dict:
+    """
+    Matches item name to menu item
+    Args:
+        item_name (str): item name provided by AI.
+        menu_items (dict): menu provided by legacy system.
+    Returns:
+        dict: matched menu item
+    """
+    # 1) Exact match
+    for item in menu_items:
+        if item["name"].lower() == item_name.lower():
+            return item
+    
+    # TODO: Fuzzy match
+    
+    # TODO: Embedding search
+    
+    return None

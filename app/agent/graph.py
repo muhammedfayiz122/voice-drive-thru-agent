@@ -109,7 +109,7 @@ if __name__ == "__main__":
     _generate_graph_image(agent_graph)
     start_time = datetime.now()
     result = agent_graph.invoke({
-        "user_input": "Hello"
+        "user_input": "Hello, whats the whether like today?"
     })
     print("Final State:", result)
     print("Execution Time:", datetime.now() - start_time)
