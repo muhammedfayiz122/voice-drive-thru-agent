@@ -12,7 +12,7 @@ def submit_order(order: dict) -> dict:
     r.raise_for_status()
     return r.json()
 
-def search_menu(item_name: str) -> dict:
-    r = requests.get(f"{MCP_BASE_URL}/mcp/menu/{item_name}")
+def validate_order_items(items: list) -> dict:
+    r = requests.post(f"{MCP_BASE_URL}/mcp/validate-order-items", json=items)
     r.raise_for_status()
     return r.json()

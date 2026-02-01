@@ -2,7 +2,7 @@ from app.agent.state import AgentState
 from app.agent.utils.mcp_client import (
     check_inventory, 
     submit_order,
-    search_menu
+    validate_order_items
 )
 from app.utils.logger import get_logger
 
@@ -20,13 +20,15 @@ def inventory_check(state: AgentState) -> AgentState:
     logger.info("Performing inventory check.")
     
     items = state.get("parsed_items", [])
-    all_items_available = True
-    unavailable_items = []
     
-    for item in items:
-        user_item_name = item.get("name", "")
-        requested_qty = item.get("quantity", 1)
-        
-    inventory_status = all_items_available
-    state["inventory_status"] = inventory_status
+    try:
+        result = validate_order_items(items)
+        state["all_items_available"] = result.get("all_available", False)
+        state["order_items"] = result.get("items", [])
+    except Exception as e:
+        logger.error(f"Inventory check failed: {e}")
+        state["all_items_available"] = False
+        state["order_items"] = []
+        state["error"] = "Inventory check failed."
+    
     return state
