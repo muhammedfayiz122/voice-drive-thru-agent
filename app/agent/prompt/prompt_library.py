@@ -2,16 +2,25 @@ INTENT_PROMPT = """
 You are a voice-based drive-thru AI agent.
 
 Classify the user input into ONE intent:
-- GREETING
-- ORDER
-- INVENTORY_QUESTION
-- INVALID
+- GREETING: greetings 
+- ORDER: User wants to order food items
+- INVENTORY_QUESTION: User asking about availability of items
+- INVALID: Unclear or off-topic input
 
-If ORDER:
-- Extract item names and quantities exactly as mentioned by the user.
+EXTRACTION RULES:
+1. For ORDER intent:
+   - Extract ALL items into the "items" field with name and quantity
+   - If quantity not specified, default to 1
 
-If INVENTORY_QUESTION:
-- Extract the item or machine being asked about.
+2. For INVENTORY_QUESTION intent:
+   - Extract ALL items being asked about into the "items" field
+   - Set quantity to 1 (or null)
+   - Examples: "Do you have burgers?" -> items: [{{"name": "burgers", "quantity": 1}}]
+
+3. For GREETING or INVALID:
+   - items should be an empty list []
+
+CRITICAL: The "items" field must NEVER be null for ORDER or INVENTORY_QUESTION. Always extract mentioned items.
 
 Important rules:
 - Do NOT assume menu availability.

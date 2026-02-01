@@ -47,8 +47,9 @@ def llm_intent_analyzer(state: AgentState) -> AgentState:
 
     state["intent"] = data.get("intent", "INVALID")
     state["confidence"] = data.get("confidence", None)
-    state["parsed_items"] = data.get("order_items", [])
-    state["inventory_target"] = data.get("inventory_item", None)
+    
+    items = data.get("items", [])
+    state["parsed_items"] = items if items else []
 
     return state
 

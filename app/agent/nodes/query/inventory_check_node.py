@@ -23,8 +23,9 @@ def inventory_check(state: AgentState) -> AgentState:
     
     try:
         result = validate_order_items(items)
+        print(result)
         state["all_items_available"] = result.get("all_available", False)
-        state["order_items"] = result.get("items", [])
+        state["order_items"] = result.get("results", [])
     except Exception as e:
         logger.error(f"Inventory check failed: {e}")
         state["all_items_available"] = False

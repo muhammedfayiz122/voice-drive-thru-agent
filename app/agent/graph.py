@@ -104,12 +104,13 @@ def _generate_graph_image(graph, output_file_path: str = "workflow/agent_graph.p
     return True
 
 if __name__ == "__main__":
-    from datetime import datetime
+    import time
     agent_graph = build_graph()
     _generate_graph_image(agent_graph)
-    start_time = datetime.now()
+    start_time = time.perf_counter()
     result = agent_graph.invoke({
-        "user_input": "Hello, whats the whether like today?"
+        "user_input": "Hello, I want to check if you have Grilled Chicken Panini available."
     })
+    elapsed = time.perf_counter() - start_time
     print("Final State:", result)
-    print("Execution Time:", datetime.now() - start_time)
+    print(f"Execution Time: {elapsed:.3f} seconds")
