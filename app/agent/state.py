@@ -1,30 +1,45 @@
-from typing import TypedDict, List, Dict, Optional
+from typing import TypedDict, List, Dict, Optional, Literal
 
 class ParsedItem(TypedDict):
     name: str
     quantity: int
 
+class CartItem(TypedDict):
+    item_code: str
+    menu_name: str
+    requested_name: str
+    quantity: int
+    price: float
+    item_total: float
+
+class ModificationRequest(TypedDict):
+    modification_target: Optional[str]    # For MODIFY/REMOVE - which item to change
+    item_name: str
+    new_quantity: int  # 0 means remove
+
 class AgentState(TypedDict):
-    # User Input
+    # Input
     user_input: str
-
-    # Intent Analysis (from LLM)
-    intent: Optional[str]                # GREETING | ORDER | INVENTORY_QUESTION | INVALID
+    conversation_history: List[Dict[str, str]]  # [{"role": "user/agent", "content": "..."}]
+    
+    # Intent Analysis
+    intent: Optional[str]
     confidence: Optional[float]
-    parsed_items: List[ParsedItem]
-    inventory_target: Optional[str]      # for inventory questions
-
-    # Order Validation (from MCP)
-    order_items: Optional[List[Dict]]    # Validated items with prices, availability
-    all_items_available: Optional[bool]  # Quick check for routing
-    unavailable_items: Optional[List[str]]  # Names of unavailable items
-
-    # Final Order
-    final_order: Optional[Dict]
+    parsed_items: List[ParsedItem]       # Items from current utterance
     
-    # Response Generation
-    response_text: Optional[str]
-    expects_user_reply: Optional[bool] = False
+    modifications: Optional[ModificationRequest] 
     
-    # Error handling
-    error: Optional[str]    
+    # Cart (accumulated order)
+    cart_items: List[CartItem]
+    cart_total: float
+    
+    # Validation Results (current turn)
+    validated_items: List[Dict]
+    unavailable_items: List[str]
+    
+    # Response
+    response_text: str
+    conversation_complete: bool
+    
+    # Error
+    error: Optional[str]
