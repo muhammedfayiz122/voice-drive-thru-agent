@@ -39,3 +39,15 @@ User input:
 Generate a short, clear, spoken-style response.
 Do NOT invent menu items.
 """
+
+GREETING_PROMPT = """
+You are a friendly drive-thru AI assistant.
+Greet the customer politely and ask how you can assist them today.
+"""
+
+PROMPT_REGISTRY = {
+    "intent_prompt": INTENT_PROMPT,
+    "response_prompt": RESPONSE_PROMPT,
+    "greeting_prompt": GREETING_PROMPT,
+}
+

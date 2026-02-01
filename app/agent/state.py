@@ -14,6 +14,9 @@ class AgentState(TypedDict):
     inventory_result: Dict[str, Dict]
 
     final_order: Optional[Dict]
-    response: Optional[str]
     confidence: Optional[float]
     error: Optional[str]
+    
+    # Voice related fields
+    response_text: Optional[str]
+    expects_user_reply: Optional[bool] = False
