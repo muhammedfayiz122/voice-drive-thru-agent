@@ -1,19 +1,45 @@
+"""
+LangGraph Definition - Defines the conversation flow graph.
+
+1. Registers all handler nodes
+2. Connects intent analyzer to router
+3. Routes to appropriate handler based on intent
+4. All handlers return to END (single-turn design)
+
+Note: State managed externally in main loop.
+"""
+
 from langgraph.graph import StateGraph, START, END
 from app.agent.state import AgentState
 
-from app.agent.nodes.intent_analyzer import intent_analyzer
-from app.agent.nodes.intent_router import intent_router
-from app.agent.nodes.greeting import greeting_node
-from app.agent.nodes.order_handler import order_handler
-from app.agent.nodes.modify_handler import modify_handler
-from app.agent.nodes.remove_handler import remove_handler
-from app.agent.nodes.done_ordering import done_ordering_node
-from app.agent.nodes.cancel_order import cancel_order_node
-from app.agent.nodes.inventory_query import inventory_query_node
-from app.agent.nodes.repeat_order import repeat_order_node
-from app.agent.nodes.unclear_handler import unclear_handler
+from app.agent.nodes import (
+    intent_analyzer,
+    intent_router,
+    greeting_node,
+    order_handler,
+    modify_handler,
+    remove_handler,
+    done_ordering_node,
+    cancel_order_node,
+    inventory_query_node,
+    repeat_order_node,
+    unclear_handler,
+    show_menu_node,
+)
+
 
 def build_graph():
+    """
+    Builds and compiles the LangGraph state machine.
+    
+    1. Creates StateGraph with AgentState schema
+    2. Adds all handler nodes
+    3. Configures conditional routing from intent analyzer
+    4. Connects all handlers to END
+    
+    Returns:
+        CompiledGraph: Ready-to-invoke graph
+    """
     graph = StateGraph(AgentState)
     
     # Nodes
@@ -27,6 +53,7 @@ def build_graph():
     graph.add_node("inventory_query", inventory_query_node)
     graph.add_node("repeat_order", repeat_order_node)
     graph.add_node("unclear_handler", unclear_handler)
+    graph.add_node("show_menu", show_menu_node)
     
     # Entry
     graph.add_edge(START, "intent_analyzer")
@@ -45,6 +72,7 @@ def build_graph():
             "inventory": "inventory_query",
             "repeat": "repeat_order",
             "unclear": "unclear_handler",
+            "show_menu": "show_menu",
         }
     )
     
@@ -58,5 +86,6 @@ def build_graph():
     graph.add_edge("inventory_query", END)
     graph.add_edge("repeat_order", END)
     graph.add_edge("unclear_handler", END)
+    graph.add_edge("show_menu", END)
     
     return graph.compile()
