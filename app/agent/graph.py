@@ -109,7 +109,7 @@ if __name__ == "__main__":
     _generate_graph_image(agent_graph)
     start_time = time.perf_counter()
     result = agent_graph.invoke({
-        "user_input": "Hello, I want to check if you have Grilled Chicken Panini available."
+        "user_input": "Hello, I want Grilled Chicken Panini"
     })
     elapsed = time.perf_counter() - start_time
     print("Final State:", result)
