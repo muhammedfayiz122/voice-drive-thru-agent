@@ -3,6 +3,8 @@ Repeat order node - handles REPEAT_ORDER intent.
 1. Reads back current cart items
 2. Reports running total
 3. Asks if customer wants more
+
+it gives current status of order to user
 """
 
 from app.agent.state import AgentState

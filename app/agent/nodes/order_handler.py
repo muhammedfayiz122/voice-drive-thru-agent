@@ -1,8 +1,8 @@
 """
 Order Handler Node - Handles ORDER and ADD_MORE intents.
 
-Optimized: Uses MenuCache for instant local validation.
-No MCP calls in request path.
+-> Uses MenuCache for instant local validation.
+-> No MCP calls in request path.
 
 
 1. Validates items against cached menu
@@ -13,6 +13,8 @@ No MCP calls in request path.
 # CRITICAL: No MCP calls in request path - must use MenuCache only!
 # TODO: Call MCP -> for final validation at order submission time and distract user by saying "Let me double-check that for you".
 # REVISE: fuzzy matching vs llm matching for item names.
+
+Note: State managed externally - cart_items, cart_total passed in state.        
 """
 
 import time
