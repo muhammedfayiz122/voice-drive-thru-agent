@@ -29,9 +29,8 @@ if "%ARG%"=="mcp" (
     goto :eof
 )
 
-if "%ARG%"=="mcp" (
-    echo Starting FastAPI server == development
-    uvicorn app.main:app --reload --reload-dir ./app --host 127.0.0.1 --port 8000
-    @REM gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+if "%ARG%"=="graph" (
+    @REM echo Starting FastAPI server == development
+    python -m app.agent.graph    @REM gunicorn app.main:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
     goto :eof
 )
