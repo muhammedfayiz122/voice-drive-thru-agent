@@ -7,8 +7,10 @@ Talks to legacy system
 Because legacy is unsafe by design
 """
 import requests
+from app.config import settings
 
-LEGACY_BASE_URL = "http://localhost:7000/legacy"
+
+LEGACY_BASE_URL = f"{settings.legacy_system_url}/legacy"
 
 def fetch_menu():
     """Fetches menu from legacy system"""
@@ -17,7 +19,7 @@ def fetch_menu():
     return response.json()
 
 def fetch_inventory():
-    """"""
+    """Fetches full inventory from legacy system"""
     response = requests.get(f"{LEGACY_BASE_URL}/inventory")
     response.raise_for_status()
     return response.json()
