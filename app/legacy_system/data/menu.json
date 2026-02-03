@@ -8,10 +8,45 @@
             "category": "Pizza"
         },
         {
+            "item_code": "PZ002",
+            "name": "Pepperoni Pizza",
+            "description": "Loaded with spicy pepperoni slices, mozzarella cheese, and marinara sauce.",
+            "price_inr": 10.99,
+            "category": "Pizza"
+        },
+        {
+            "item_code": "PZ003",
+            "name": "BBQ Chicken Pizza",
+            "description": "Grilled chicken, red onions, cilantro, and tangy BBQ sauce on a crispy crust.",
+            "price_inr": 12.99,
+            "category": "Pizza"
+        },
+        {
+            "item_code": "PZ004",
+            "name": "Veggie Supreme Pizza",
+            "description": "Bell peppers, mushrooms, olives, onions, and tomatoes with mozzarella.",
+            "price_inr": 11.49,
+            "category": "Pizza"
+        },
+        {
             "item_code": "SL002",
             "name": "Caesar Salad",
             "description": "Crisp romaine lettuce with Caesar dressing, croutons, and Parmesan cheese.",
             "price_inr": 6.49,
+            "category": "Salad"
+        },
+        {
+            "item_code": "SL007",
+            "name": "Greek Salad",
+            "description": "Fresh cucumbers, tomatoes, olives, feta cheese, and red onion with olive oil dressing.",
+            "price_inr": 7.49,
+            "category": "Salad"
+        },
+        {
+            "item_code": "SL008",
+            "name": "Garden Salad",
+            "description": "Mixed greens with cherry tomatoes, carrots, and your choice of dressing.",
+            "price_inr": 5.49,
             "category": "Salad"
         },
         {
@@ -22,10 +57,45 @@
             "category": "Pasta"
         },
         {
+            "item_code": "SP010",
+            "name": "Fettuccine Alfredo",
+            "description": "Creamy Alfredo sauce with Parmesan cheese over fettuccine pasta.",
+            "price_inr": 9.99,
+            "category": "Pasta"
+        },
+        {
+            "item_code": "SP011",
+            "name": "Penne Arrabiata",
+            "description": "Penne pasta in a spicy tomato sauce with garlic and red chili flakes.",
+            "price_inr": 8.99,
+            "category": "Pasta"
+        },
+        {
+            "item_code": "SP012",
+            "name": "Lasagna",
+            "description": "Layers of pasta, beef ragù, béchamel sauce, and melted mozzarella.",
+            "price_inr": 12.49,
+            "category": "Pasta"
+        },
+        {
             "item_code": "DS004",
             "name": "Tiramisu",
             "description": "Classic Italian dessert with layers of coffee-soaked ladyfingers and mascarpone cheese.",
             "price_inr": 5.99,
+            "category": "Dessert"
+        },
+        {
+            "item_code": "DS013",
+            "name": "Chocolate Lava Cake",
+            "description": "Warm chocolate cake with a molten chocolate center, served with whipped cream.",
+            "price_inr": 6.99,
+            "category": "Dessert"
+        },
+        {
+            "item_code": "DS014",
+            "name": "Panna Cotta",
+            "description": "Silky Italian cream dessert topped with fresh berry compote.",
+            "price_inr": 5.49,
             "category": "Dessert"
         },
         {
@@ -36,10 +106,38 @@
             "category": "Soup"
         },
         {
+            "item_code": "SO015",
+            "name": "Tomato Basil Soup",
+            "description": "Creamy tomato soup with fresh basil, served with garlic bread croutons.",
+            "price_inr": 4.49,
+            "category": "Soup"
+        },
+        {
+            "item_code": "SO016",
+            "name": "Chicken Noodle Soup",
+            "description": "Comforting soup with tender chicken, egg noodles, and fresh vegetables.",
+            "price_inr": 5.49,
+            "category": "Soup"
+        },
+        {
             "item_code": "SD006",
             "name": "Grilled Chicken Panini",
             "description": "Grilled chicken breast with mozzarella, tomato, and basil pesto on ciabatta bread.",
             "price_inr": 7.99,
+            "category": "Sandwich"
+        },
+        {
+            "item_code": "SD017",
+            "name": "Club Sandwich",
+            "description": "Triple-decker with turkey, bacon, lettuce, tomato, and mayo on toasted bread.",
+            "price_inr": 8.49,
+            "category": "Sandwich"
+        },
+        {
+            "item_code": "SD018",
+            "name": "Veggie Wrap",
+            "description": "Grilled vegetables, hummus, feta cheese, and mixed greens in a soft tortilla.",
+            "price_inr": 6.99,
             "category": "Sandwich"
         },
         {
@@ -48,6 +146,76 @@
             "description": "Classic vanilla ice cream made with real vanilla beans.",
             "price_inr": 3.99,
             "category": "Dessert"
+        },
+        {
+            "item_code": "ICE19",
+            "name": "Chocolate Ice Cream",
+            "description": "Rich and creamy chocolate ice cream made with premium cocoa.",
+            "price_inr": 3.99,
+            "category": "Dessert"
+        },
+        {
+            "item_code": "ICE20",
+            "name": "Strawberry Sundae",
+            "description": "Vanilla ice cream topped with fresh strawberries, whipped cream, and chocolate drizzle.",
+            "price_inr": 5.49,
+            "category": "Dessert"
+        },
+        {
+            "item_code": "BV021",
+            "name": "Fresh Lemonade",
+            "description": "Freshly squeezed lemonade with a hint of mint.",
+            "price_inr": 2.99,
+            "category": "Beverage"
+        },
+        {
+            "item_code": "BV022",
+            "name": "Iced Tea",
+            "description": "Refreshing iced tea with lemon, sweetened or unsweetened.",
+            "price_inr": 2.49,
+            "category": "Beverage"
+        },
+        {
+            "item_code": "BV023",
+            "name": "Cappuccino",
+            "description": "Espresso with steamed milk and a layer of foam, dusted with cocoa.",
+            "price_inr": 3.99,
+            "category": "Beverage"
+        },
+        {
+            "item_code": "BV024",
+            "name": "Mango Smoothie",
+            "description": "Fresh mango blended with yogurt and a touch of honey.",
+            "price_inr": 4.49,
+            "category": "Beverage"
+        },
+        {
+            "item_code": "AP025",
+            "name": "Garlic Bread",
+            "description": "Toasted bread with garlic butter and herbs, served with marinara dip.",
+            "price_inr": 3.49,
+            "category": "Appetizer"
+        },
+        {
+            "item_code": "AP026",
+            "name": "Mozzarella Sticks",
+            "description": "Crispy fried mozzarella sticks served with marinara sauce.",
+            "price_inr": 5.99,
+            "category": "Appetizer"
+        },
+        {
+            "item_code": "AP027",
+            "name": "Bruschetta",
+            "description": "Toasted bread topped with fresh tomatoes, basil, garlic, and olive oil.",
+            "price_inr": 4.99,
+            "category": "Appetizer"
+        },
+        {
+            "item_code": "AP028",
+            "name": "Chicken Wings",
+            "description": "Crispy chicken wings tossed in your choice of buffalo, BBQ, or honey garlic sauce.",
+            "price_inr": 8.99,
+            "category": "Appetizer"
         }
     ]
 }
