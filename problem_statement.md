@@ -1,0 +1,3 @@
+The Scenario
+We are building a Voice-First Drive-Thru Agent for a fast-food chain. The agent must take complex orders, check live inventory (e.g., "Is the ice cream machine broken?"), and submit orders to the Kitchen Display System (KDS).
+The challenge is that the Menu and Inventory data live on a legacy server. So you must wrap this legacy system in an MCP Server so the AI Agent can talk to it safely.
