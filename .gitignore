@@ -243,3 +243,8 @@ tmp.*
 tmp
 .temp/
 *.temp
+archive/
+archive/
+presentations/
+presentation/
+data/

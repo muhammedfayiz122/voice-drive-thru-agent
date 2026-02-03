@@ -3,16 +3,56 @@
       "ICE_CREAM_MACHINE": { 
         "status": "BROKEN",
         "last_checked": "2026-01-25"
+      },
+      "PIZZA_OVEN": {
+        "status": "WORKING",
+        "last_checked": "2026-02-01"
+      },
+      "COFFEE_MACHINE": {
+        "status": "WORKING",
+        "last_checked": "2026-02-02"
+      },
+      "BLENDER": {
+        "status": "WORKING",
+        "last_checked": "2026-01-30"
+      },
+      "DEEP_FRYER": {
+        "status": "WORKING",
+        "last_checked": "2026-02-01"
       }
     },
     "stock_levels": {
       "PZ001": 20,
+      "PZ002": 18,
+      "PZ003": 12,
+      "PZ004": 15,
       "SL002": 15,
+      "SL007": 14,
+      "SL008": 20,
       "SP003": 10,
+      "SP010": 12,
+      "SP011": 8,
+      "SP012": 6,
       "DS004": 5,
+      "DS013": 8,
+      "DS014": 10,
       "SO005": 0,
+      "SO015": 12,
+      "SO016": 10,
       "SD006": 8,
-      "ICE09": 30
+      "SD017": 10,
+      "SD018": 14,
+      "ICE09": 30,
+      "ICE19": 25,
+      "ICE20": 15,
+      "BV021": 30,
+      "BV022": 40,
+      "BV023": 50,
+      "BV024": 20,
+      "AP025": 25,
+      "AP026": 18,
+      "AP027": 22,
+      "AP028": 16
     }
 }
   

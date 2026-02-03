@@ -66,36 +66,34 @@ class MenuCache:
         """
         from app.agent.utils.mcp_client import MCPClient
         
+        client = MCPClient()
+        
+        # Load menu (required)
         try:
-            client = MCPClient()
-            
-            # Fetch menu from MCP server
             raw_menu = client.get_menu()
-            
-            # Normalize menu item fields
             cls._menu = []
             for item in raw_menu:
                 normalized = {
-                    "item_code": item.get("item_code"),
+                    "item_code": item.get("item_code") or item.get("id"),
                     "name": item.get("name"),
                     "category": item.get("category", "Other"),
-                    # Handle both price and price_inr
                     "price": item.get("price") or item.get("price_inr", 0),
                 }
                 cls._menu.append(normalized)
-            
             logger.info(f"Loaded {len(cls._menu)} menu items from MCP server")
-            
-            # Fetch inventory from MCP server
+        except Exception as e:
+            logger.error(f"Failed to load menu: {e}")
+            cls._menu = []
+        
+        # Load inventory (optional - don't fail if unavailable)
+        try:
             cls._inventory = client.get_inventory()
             logger.info(f"Loaded inventory from MCP server")
-            
-            cls._last_refresh = time.time()
-            
         except Exception as e:
-            logger.error(f"Failed to load cache from MCP server: {e}")
-            cls._menu = []
-            cls._inventory = {}
+            logger.warning(f"Inventory unavailable, assuming all items available: {e}")
+            cls._inventory = {"stock_levels": {}, "machines": {}}
+        
+        cls._last_refresh = time.time()
     
     @classmethod
     def get_menu(cls) -> list:
