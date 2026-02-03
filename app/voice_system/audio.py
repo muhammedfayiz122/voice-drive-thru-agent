@@ -200,10 +200,10 @@ class AudioRecorder:
 
 class AudioPlayer:
     """
-    Plays audio through speakers.
+    Plays audio through speakers with streaming and barge-in support.
     
-    1. Accepts raw audio bytes or MP3
-    2. Converts and plays through PyAudio
+    1. Accepts raw audio bytes or streaming chunks
+    2. Supports interruptible playback (barge-in)
     3. Non-blocking playback option
     
     Note: Supports streaming playback for low latency.
@@ -217,6 +217,13 @@ class AudioPlayer:
         self.stream: Optional[pyaudio.Stream] = None
         self.is_playing = False
         self._play_thread: Optional[threading.Thread] = None
+        self._stop_requested = False
+        self._interrupted = False
+    
+    @property
+    def was_interrupted(self) -> bool:
+        """Check if last playback was interrupted."""
+        return self._interrupted
     
     def play_audio(self, audio_data: bytes, sample_rate: int = 24000, blocking: bool = True):
         """
@@ -243,6 +250,9 @@ class AudioPlayer:
         """
         try:
             self.is_playing = True
+            self._stop_requested = False
+            self._interrupted = False
+            
             stream = self.audio.open(
                 format=FORMAT,
                 channels=1,
@@ -253,7 +263,8 @@ class AudioPlayer:
             # Play in chunks for smoother playback
             chunk_size = 4096
             for i in range(0, len(audio_data), chunk_size):
-                if not self.is_playing:
+                if self._stop_requested:
+                    self._interrupted = True
                     break
                 chunk = audio_data[i:i + chunk_size]
                 stream.write(chunk)
@@ -265,6 +276,68 @@ class AudioPlayer:
         except Exception as e:
             logger.error(f"Audio playback error: {e}")
             self.is_playing = False
+    
+    def play_streaming(
+        self, 
+        audio_queue: queue.Queue, 
+        sample_rate: int = 24000,
+        check_interrupt: Optional[callable] = None
+    ) -> bool:
+        """
+        Play audio from a queue with streaming support and barge-in detection.
+        
+        Args:
+            audio_queue: Queue containing audio chunks (None signals end)
+            sample_rate: Audio sample rate
+            check_interrupt: Callback that returns True if playback should stop
+            
+        Returns:
+            bool: True if played to completion, False if interrupted
+        """
+        try:
+            self.is_playing = True
+            self._stop_requested = False
+            self._interrupted = False
+            
+            stream = self.audio.open(
+                format=FORMAT,
+                channels=1,
+                rate=sample_rate,
+                output=True
+            )
+            
+            while True:
+                # Check for interrupt (barge-in)
+                if self._stop_requested or (check_interrupt and check_interrupt()):
+                    self._interrupted = True
+                    # Drain the queue
+                    while True:
+                        try:
+                            chunk = audio_queue.get_nowait()
+                            if chunk is None:
+                                break
+                        except queue.Empty:
+                            break
+                    break
+                
+                try:
+                    chunk = audio_queue.get(timeout=0.05)
+                    if chunk is None:  # End of audio signal
+                        break
+                    stream.write(chunk)
+                except queue.Empty:
+                    continue
+            
+            stream.stop_stream()
+            stream.close()
+            self.is_playing = False
+            
+            return not self._interrupted
+            
+        except Exception as e:
+            logger.error(f"Streaming playback error: {e}")
+            self.is_playing = False
+            return False
     
     def play_mp3(self, mp3_data: bytes, blocking: bool = True):
         """

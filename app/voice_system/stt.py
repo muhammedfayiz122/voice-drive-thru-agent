@@ -120,6 +120,7 @@ class DeepgramSTT:
         self._client: Optional[DeepgramClient] = None
         self._connection: Optional[Any] = None
         self._ctx_manager: Optional[Any] = None
+        self._needs_reconnect = False
         
         # Threading
         self._listener_thread: Optional[threading.Thread] = None
@@ -253,7 +254,19 @@ class DeepgramSTT:
         Note:
             - Automatically converts stereo to mono if configured
             - Silently drops audio if not connected
+            - Auto-reconnects if connection was lost
         """
+        # Check if we need to reconnect
+        if self._needs_reconnect:
+            logger.info("Auto-reconnecting STT...")
+            self._needs_reconnect = False
+            self._cleanup()
+            with self._lock:
+                self._state = STTState.IDLE
+            if not self.start():
+                logger.error("Auto-reconnect failed")
+                return
+        
         if not self.is_listening or not self._connection:
             return
         
@@ -325,7 +338,9 @@ class DeepgramSTT:
         with self._lock:
             if self._state != STTState.IDLE:
                 self._state = STTState.CLOSED
-    
+                # Set flag for auto-reconnect
+                self._needs_reconnect = True
+
     def _on_error(self, event):
         """Handle WebSocket error event."""
         logger.error(f"Deepgram WebSocket error: {event}")

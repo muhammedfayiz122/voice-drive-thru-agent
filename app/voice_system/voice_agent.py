@@ -4,11 +4,14 @@ Flow:
 1. Play greeting
 2. Listen for customer speech (STT)
 3. Process through LangGraph agent
-4. Speak response (TTS)
+4. Speak response (TTS) - mic muted to prevent echo
 5. Repeat until order complete
 """
 
 import time
+import queue
+import threading
+import struct
 
 from typing import Optional
 from app.agent.graph import build_graph
@@ -18,9 +21,9 @@ from app.voice_system.stt import DeepgramSTT
 from app.voice_system.tts import DeepgramTTS
 from app.config import settings
 from app.utils.logger import get_logger
-import threading
 
 logger = get_logger(__name__)
+
 
 class VoiceAgent:
     """
@@ -33,7 +36,6 @@ class VoiceAgent:
         """
         Initializes voice agent components.
         """
-        # TODO: give menu familiarity to agent (via state or keyword optimization technique)
         # Initialize cache first (critical for latency)
         logger.info("Initializing MenuCache...")
         MenuCache.initialize()
@@ -42,7 +44,6 @@ class VoiceAgent:
         logger.info("Building agent graph...")
         self.agent = build_graph()
         
-        # FIXME: keyword optimization technique will not work with deepgram flux model
         # Build keywords from menu for STT accuracy
         stt_keywords = self._build_stt_keywords()
         logger.info(f"Loaded {len(stt_keywords)} STT keywords from menu")
@@ -61,7 +62,9 @@ class VoiceAgent:
         self.cart_total = 0.0
         self.conversation_history = []
         self.is_running = False
-        self._mute_mic = False  # Mute mic while TTS is playing (prevents echo)
+        
+        # Mic mute during TTS (prevents echo/feedback from corrupting transcription)
+        self._mute_mic = False
         
         logger.info("VoiceAgent initialized")
     
@@ -89,7 +92,9 @@ class VoiceAgent:
     
     def speak(self, text: str, blocking: bool = True):
         """
-        Speaks text through TTS.
+        Speaks text through TTS with streaming for low latency.
+        Mic is muted during playback to prevent echo corruption.
+        
         Args:
             text: Text to speak
             blocking: Wait for playback to complete
@@ -98,16 +103,23 @@ class VoiceAgent:
             return
         
         try:
-            # Mute mic to prevent echo (mic picking up speaker)
+            # Mute mic to prevent echo (speaker audio corrupts STT)
             self._mute_mic = True
             
-            audio, sample_rate = self.tts.speak_pcm(text)
-            if audio:
-                self.player.play_audio(audio, sample_rate, blocking=blocking)
+            # Create audio queue for streaming playback
+            audio_queue = queue.Queue()
             
-            # Small delay then unmute
-            time.sleep(0.2)
+            # Start TTS generation in background (streams chunks to queue)
+            self.tts.speak_pcm_async(text, audio_queue, sample_rate=24000)
+            
+            # Play audio from queue (streaming = low latency start)
+            self.player.play_streaming(audio_queue, sample_rate=24000)
+            
+            # Grace period after TTS ends before listening again
+            # This prevents tail-end echo from being picked up
+            time.sleep(0.3)
             self._mute_mic = False
+            
         except Exception as e:
             self._mute_mic = False
             logger.error(f"Speak failed: {e}")
@@ -223,7 +235,8 @@ class VoiceAgent:
                 response = self.process(user_input)
                 if response:
                     print(f"Agent: {response}")
-                    self.speak(response) 
+                    self.speak(response)
+                    
         except KeyboardInterrupt:
             print("\n\nGoodbye!")
             self.is_running = False
@@ -232,14 +245,14 @@ class VoiceAgent:
     
     def _start_audio_streaming(self):
         """Start background thread to stream audio to STT."""
-        import threading
-        
         def stream_audio():
             while self.is_running:
+                # Always get audio to prevent queue buildup
                 chunk = self.recorder.get_audio_chunk(timeout=0.1)
                 if chunk and not self._mute_mic:
+                    # Only send to STT when not muted (TTS not playing)
                     self.stt.send_audio(chunk)
-                # Still consume audio when muted (don't let queue build up)
+                # When muted, audio is discarded to prevent echo
         
         self._audio_thread = threading.Thread(target=stream_audio, daemon=True)
         self._audio_thread.start()
