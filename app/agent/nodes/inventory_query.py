@@ -179,7 +179,7 @@ class InventoryQueryNode:
         
         if not_available:
             for name, reason in not_available:
-                parts.append(f"Sorry, {name} is {reason}")
+                parts.append(f"Sorry, {reason}")
         
         if not_found:
             # Get suggestions using cache (no MCP calls)

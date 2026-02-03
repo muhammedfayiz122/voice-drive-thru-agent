@@ -73,7 +73,7 @@ class AgentState(TypedDict):
     confidence: Optional[float]
     parsed_items: List[ParsedItem]
     
-    modifications: Optional[ModificationRequest] 
+    modifications: Optional[ModificationRequest]  # CRITICAL: Only 1 item can be modified at a time.
     
     # Cart (accumulated order)
     cart_items: List[CartItem]

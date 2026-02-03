@@ -96,7 +96,7 @@ class ShowMenuNode:
             str: brief voice-friendly response
         """
         if len(categories) == 0:
-            return "We've got a variety of dishes. What are you in the mood for?"
+            return "We are currently updating our menu. What are you in the mood for?"
         
         if len(categories) == 1:
             return f"We've got {categories[0].lower()}. What would you like?"

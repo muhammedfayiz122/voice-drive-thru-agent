@@ -1,3 +1,11 @@
+"""
+Prompt templates for LLM interactions.
+1. INTENT_PROMPT - Classifies customer speech into intents
+2. RESPONSE_PROMPT - Generates voice-friendly responses
+3. GREETING_PROMPT - Initial greeting generation
+
+"""
+
 INTENT_PROMPT = """
 You are analyzing customer speech at a fast-food drive-thru.
 
@@ -18,7 +26,7 @@ CLASSIFY THE INTENT:
 
 2. ORDER - Customer ordering items for the first time, or after being asked what they want
    - Extract items with quantities into "items" field
-   - Example: "I'll have 2 burgers and a coke" → items: [{name: "burgers", quantity: 2}, {name: "coke", quantity: 1}]
+   - Example: "I'll have 2 burgers and a coke" → items: [{{"name": "burgers", "quantity": 2}}, {{"name": "coke", "quantity": 1}}]
 
 3. ADD_MORE - Customer adding items to existing order (cart is not empty)
    - Triggered by: "also", "and", "add", "I also want", "throw in"
@@ -46,7 +54,11 @@ CLASSIFY THE INTENT:
 9. REPEAT_ORDER - Customer wants to hear current order
    - Phrases: "what did I order", "read that back", "what's my order"
 
-10. UNCLEAR - Cannot understand or off-topic
+10. SHOW_MENU - Customer asking what's available
+    - Phrases: "what do you have", "show menu", "what's on the menu", "what can I get"
+    - Do NOT set query_item - this is for full menu, not specific item
+
+11. UNCLEAR - Cannot understand or off-topic
 
 ---
 
@@ -54,6 +66,8 @@ RULES:
 - If cart is empty and customer orders items → ORDER
 - If cart has items and customer adds more → ADD_MORE
 - "That's all" after ordering → DONE_ORDERING
+- "What do you have" → SHOW_MENU (general menu inquiry)
+- "Do you have X" → INVENTORY_QUESTION (specific item inquiry)
 - Be generous with quantity - if not specified, assume 1
 - Never invent items not mentioned by customer
 
@@ -69,7 +83,7 @@ CONTEXT:
 - Validated Items: {validated_items}
 - Unavailable Items: {unavailable_items}
 - Current Cart: {cart_summary}
-- Cart Total: ₹{cart_total}
+- Cart Total: ${cart_total}
 
 Generate a natural, spoken response. Keep it brief and conversational.
 

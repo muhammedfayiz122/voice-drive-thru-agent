@@ -108,6 +108,10 @@ def validate_order_items(items: List[OrderItemRequest]):
         "results": results
     }    
    
+@app.get("/mcp/inventory")
+def get_full_inventory():
+    """Returns full inventory status."""
+    return fetch_inventory()
     
 @app.get("/mcp/inventory/{item_code}")
 def get_item_availability(item_code: str):

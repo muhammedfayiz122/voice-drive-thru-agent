@@ -89,3 +89,19 @@ def build_graph():
     graph.add_edge("show_menu", END)
     
     return graph.compile()
+
+def _generate_graph_image(graph, output_file_path: str = "workflow/agent_graph.png") -> bool:
+    """Generate and save the LangGraph image."""
+    from langchain_core.runnables.graph_mermaid import draw_mermaid_png
+    from pathlib import Path
+    import os
+    if not os.path.exists(os.path.dirname(output_file_path)):
+        Path(os.path.dirname(output_file_path)).mkdir(parents=True, exist_ok=True)
+    mermaid_syntax = graph.get_graph().draw_mermaid()
+    draw_mermaid_png(mermaid_syntax, output_file_path=output_file_path)
+    return True
+
+if __name__ == "__main__":
+    graph = build_graph()
+    _generate_graph_image(graph)
+    print("LangGraph compiled successfully.")

@@ -312,9 +312,10 @@ class OrderHandler:
                 
                 if name in suggestions and suggestions[name]:
                     suggestion_text = " or ".join(suggestions[name][:2])
-                    parts.append(f"Sorry, {name} is {reason}. How about {suggestion_text} instead?")
+                    # print(f"Sorry, {reason}. How about {suggestion_text} instead?")
+                    parts.append(f"Sorry, {reason}. How about {suggestion_text} instead?")
                 else:
-                    parts.append(f"Sorry, {name} is {reason}")
+                    parts.append(f"Sorry, {reason}")
         
         # Ask for more
         if added or not unavailable:
